@@ -1,11 +1,13 @@
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
+const router = express.Router();
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+const rooms = {};
 io.on("connection", (socket) => {
   console.log("New client connected");
 
@@ -51,5 +53,15 @@ io.on("connection", (socket) => {
   });
 });
 
+router.get("/", (req, res) => {
+  res.send("Welcome to the server!");
+});
+
+app.use("/api", router);
+
+app.use("/functions/server", router);
+
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+module.exports.handler = serverless(app);
