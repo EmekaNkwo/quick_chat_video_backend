@@ -59,7 +59,7 @@ router.get("/", (req, res) => {
 
 app.use("/api", router);
 
-app.use("/prof_video_backend/functions/server", router);
+app.use("/.netlify/functions/server", router);
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
