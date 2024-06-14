@@ -1,5 +1,6 @@
 const express = require("express");
 const http = require("http");
+const ServerlessHttp = require("serverless-http");
 const socketIo = require("socket.io");
 const router = express.Router();
 
@@ -59,9 +60,15 @@ router.get("/", (req, res) => {
 
 app.use("/api", router);
 
-app.use("/.netlify/functions/server", router);
+app.use("/.netlify/functions/server", (req, res) => {
+  return res.json({ message: "Hello from .netlify/functions/server" });
+});
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-module.exports.handler = serverless(app);
+const handler = ServerlessHttp(app);
+
+module.exports.handler = async (event, context) => {
+  return handler(event, context);
+};
